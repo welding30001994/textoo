@@ -252,6 +252,10 @@
             z-index: 1001;
         }
         
+        .notification.error {
+            background-color: #e74c3c;
+        }
+        
         /* Vista de enlaces guardados */
         .saved-links-view {
             display: none;
@@ -307,13 +311,33 @@
         .saved-link-card .view-btn {
             background-color: #2ecc71;
         }
+        
+        /* Modo visualización */
+        .view-mode .toolbar,
+        .view-mode .editor-header {
+            display: none;
+        }
+        
+        .view-mode .editor-area {
+            width: 100%;
+        }
+        
+        .view-mode .canvas {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: none;
+            border: none;
+        }
+        
+        .view-mode .editable {
+            border: none !important;
+            pointer-events: none;
+        }
     </style>
-    <!-- Importar Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="main-container">
         <!-- Panel de herramientas lateral -->
         <div class="toolbar">
             <h2>Herramientas</h2>
@@ -416,21 +440,6 @@
     </div>
 
     <script>
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3MI1klgBSHs1h6QT4VPNoScCfCwMV_Ck",
-            authDomain: "usuario-b0384.firebaseapp.com",
-            databaseURL: "https://usuario-b0384-default-rtdb.firebaseio.com",
-            projectId: "usuario-b0384",
-            storageBucket: "usuario-b0384.firebasestorage.app",
-            messagingSenderId: "196266170863",
-            appId: "1:196266170863:web:4ea57f489df94aba94fe1a"
-        };
-        
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        
         document.addEventListener('DOMContentLoaded', function() {
             // Variables globales
             let selectedElement = null;
@@ -465,6 +474,7 @@
             const savedLinksView = document.getElementById('saved-links-view');
             const savedLinksList = document.getElementById('saved-links-list');
             const backToEditor = document.getElementById('back-to-editor');
+            const mainContainer = document.getElementById('main-container');
             
             // Inicializar con el primer elemento seleccionado
             selectElement(document.querySelector('.editable'));
@@ -702,44 +712,42 @@
                 }
             });
             
-            // Guardar proyecto en Firebase
+            // Guardar proyecto en localStorage
             saveBtn.addEventListener('click', function() {
+                const projectName = prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto") || "Mi Proyecto";
+                
                 const projectData = {
                     content: canvas.innerHTML,
                     timestamp: Date.now(),
-                    title: prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto") || "Mi Proyecto"
+                    title: projectName
                 };
                 
-                // Guardar en Firebase
-                const newProjectRef = database.ref('projects').push();
-                newProjectRef.set(projectData)
-                    .then(() => {
-                        // Mostrar enlace
-                        const projectId = newProjectRef.key;
-                        const shareUrl = `${window.location.origin}${window.location.pathname}?view=${projectId}`;
-                        
-                        showNotification('¡Proyecto guardado exitosamente!');
-                        
-                        // Guardar en localStorage para acceso rápido
-                        saveProjectLink(projectId, projectData.title, shareUrl);
-                    })
-                    .catch(error => {
-                        console.error("Error al guardar:", error);
-                        showNotification('Error al guardar el proyecto');
-                    });
+                // Guardar en localStorage
+                const projectId = 'project_' + Date.now();
+                const shareUrl = `${window.location.origin}${window.location.pathname}?view=${projectId}`;
+                
+                // Guardar en localStorage
+                saveProjectToLocalStorage(projectId, projectData, shareUrl);
+                
+                showNotification('¡Proyecto guardado exitosamente en tu navegador!');
             });
             
-            // Guardar enlace en localStorage
-            function saveProjectLink(id, title, url) {
+            // Guardar en localStorage
+            function saveProjectToLocalStorage(id, data, url) {
                 let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
-                savedProjects[id] = { title, url };
+                savedProjects[id] = { 
+                    title: data.title, 
+                    url: url,
+                    timestamp: data.timestamp,
+                    content: data.content
+                };
                 localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
+                return id;
             }
             
-            // Cargar enlaces guardados
+            // Cargar proyectos guardados desde localStorage
             function loadSavedProjects() {
-                const savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
-                return savedProjects;
+                return JSON.parse(localStorage.getItem('savedProjects') || '{}');
             }
             
             // Compartir proyecto
@@ -775,21 +783,13 @@
             
             // Eliminar proyecto
             function deleteProject(projectId) {
-                // Eliminar de Firebase
-                database.ref('projects/' + projectId).remove()
-                    .then(() => {
-                        // Eliminar de localStorage
-                        let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
-                        delete savedProjects[projectId];
-                        localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
-                        
-                        showNotification('Proyecto eliminado');
-                        shareBtn.click(); // Recargar la lista
-                    })
-                    .catch(error => {
-                        console.error("Error al eliminar:", error);
-                        showNotification('Error al eliminar el proyecto');
-                    });
+                // Eliminar de localStorage
+                let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
+                delete savedProjects[projectId];
+                localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
+                
+                showNotification('Proyecto eliminado');
+                shareBtn.click(); // Recargar la lista
             }
             
             // Mostrar mis enlaces
@@ -806,9 +806,9 @@
                         linkCard.className = 'saved-link-card';
                         linkCard.innerHTML = `
                             <h3>${project.title}</h3>
-                            <a href="${project.url}" target="_blank">${project.url}</a>
+                            <a href="${project.url}" target="_blank">Abrir en nueva pestaña</a>
                             <div>
-                                <button class="view-btn" data-url="${project.url}">Ver</button>
+                                <button class="view-btn" data-id="${id}">Ver</button>
                                 <button class="delete-link" data-id="${id}">Eliminar</button>
                             </div>
                         `;
@@ -818,8 +818,8 @@
                     // Agregar event listeners
                     document.querySelectorAll('.view-btn').forEach(button => {
                         button.addEventListener('click', function() {
-                            const url = this.getAttribute('data-url');
-                            window.open(url, '_blank');
+                            const projectId = this.getAttribute('data-id');
+                            window.location.href = `?view=${projectId}`;
                         });
                     });
                     
@@ -861,14 +861,22 @@
                 }
             });
             
+            // Copiar enlace
+            copyLink.addEventListener('click', function() {
+                shareLink.select();
+                document.execCommand('copy');
+                showNotification('¡Enlace copiado al portapapeles!');
+            });
+            
             // Cerrar modal
             closeModal.addEventListener('click', function() {
                 shareModal.style.display = 'none';
             });
             
             // Mostrar notificación
-            function showNotification(message) {
+            function showNotification(message, isError = false) {
                 notification.textContent = message;
+                notification.className = isError ? 'notification error' : 'notification';
                 notification.style.display = 'block';
                 
                 setTimeout(function() {
@@ -881,30 +889,24 @@
             const viewParam = urlParams.get('view');
             
             if (viewParam) {
-                // Ocultar herramientas y mostrar solo el contenido
-                document.querySelector('.toolbar').style.display = 'none';
-                document.querySelector('.editor-header').style.display = 'none';
+                // Cambiar a modo visualización
+                mainContainer.classList.add('view-mode');
                 
-                // Cargar el proyecto desde Firebase
-                database.ref('projects/' + viewParam).once('value')
-                    .then(snapshot => {
-                        const projectData = snapshot.val();
-                        if (projectData) {
-                            canvas.innerHTML = projectData.content;
-                            
-                            // Deshabilitar edición
-                            document.querySelectorAll('.editable').forEach(element => {
-                                element.style.pointerEvents = 'none';
-                                element.style.border = 'none';
-                            });
-                        } else {
-                            canvas.innerHTML = '<p>El proyecto no existe o ha sido eliminado.</p>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error al cargar:", error);
-                        canvas.innerHTML = '<p>Error al cargar el proyecto.</p>';
+                // Cargar el proyecto desde localStorage
+                const savedProjects = loadSavedProjects();
+                const projectData = savedProjects[viewParam];
+                
+                if (projectData) {
+                    canvas.innerHTML = projectData.content;
+                    document.title = projectData.title;
+                    
+                    // Deshabilitar edición
+                    document.querySelectorAll('.editable').forEach(element => {
+                        element.style.pointerEvents = 'none';
                     });
+                } else {
+                    canvas.innerHTML = '<p>El proyecto no existe o ha sido eliminado.</p>';
+                }
             }
         });
     </script>
