@@ -30,6 +30,7 @@
             color: white;
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
         }
         
         .toolbar h2 {
@@ -125,6 +126,11 @@
             color: white;
         }
         
+        .links-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+        
         /* Canvas de edición */
         .canvas {
             width: 800px;
@@ -142,6 +148,7 @@
             padding: 10px;
             border: 2px dashed transparent;
             transition: border-color 0.3s;
+            cursor: move;
         }
         
         .editable:hover {
@@ -175,8 +182,10 @@
             background-color: white;
             padding: 25px;
             border-radius: 8px;
-            width: 400px;
+            width: 500px;
             max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .modal h2 {
@@ -192,6 +201,41 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* Lista de enlaces */
+        .links-list {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .link-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .link-item a {
+            color: #3498db;
+            text-decoration: none;
+            flex-grow: 1;
+            margin-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .link-item button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
         }
         
         /* Notificaciones */
@@ -205,8 +249,68 @@
             border-radius: 4px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             display: none;
+            z-index: 1001;
+        }
+        
+        /* Vista de enlaces guardados */
+        .saved-links-view {
+            display: none;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .saved-links-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .saved-links-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .saved-link-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .saved-link-card h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .saved-link-card a {
+            color: #3498db;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .saved-link-card button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        .saved-link-card .view-btn {
+            background-color: #2ecc71;
         }
     </style>
+    <!-- Importar Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -261,6 +365,7 @@
                 <div class="action-buttons">
                     <button class="action-button save-btn" id="save-btn">Guardar Proyecto</button>
                     <button class="action-button share-btn" id="share-btn">Compartir</button>
+                    <button class="action-button links-btn" id="links-btn">Mis Enlaces</button>
                     <button class="action-button reset-btn" id="reset-btn">Nuevo Proyecto</button>
                 </div>
             </div>
@@ -272,6 +377,17 @@
                     <p>Haz clic aquí para cambiar este texto. Puedes agregar imágenes, cambiar colores y mucho más.</p>
                 </div>
             </div>
+            
+            <!-- Vista de enlaces guardados -->
+            <div class="saved-links-view" id="saved-links-view">
+                <div class="saved-links-header">
+                    <h2>Mis Páginas Guardadas</h2>
+                    <button class="action-button" id="back-to-editor">Volver al Editor</button>
+                </div>
+                <div class="saved-links-list" id="saved-links-list">
+                    <!-- Los enlaces se cargarán aquí -->
+                </div>
+            </div>
         </div>
     </div>
     
@@ -281,6 +397,12 @@
             <h2>Compartir tu creación</h2>
             <p>Tu proyecto se ha guardado. Comparte este enlace con otras personas:</p>
             <input type="text" id="share-link" readonly>
+            
+            <h3 style="margin-top: 20px;">Tus páginas guardadas:</h3>
+            <div class="links-list" id="links-list">
+                <!-- Los enlaces se cargarán aquí -->
+            </div>
+            
             <div class="modal-buttons">
                 <button class="tool-button" id="copy-link">Copiar Enlace</button>
                 <button class="tool-button" style="background-color: #95a5a6;" id="close-modal">Cerrar</button>
@@ -294,10 +416,27 @@
     </div>
 
     <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3MI1klgBSHs1h6QT4VPNoScCfCwMV_Ck",
+            authDomain: "usuario-b0384.firebaseapp.com",
+            databaseURL: "https://usuario-b0384-default-rtdb.firebaseio.com",
+            projectId: "usuario-b0384",
+            storageBucket: "usuario-b0384.firebasestorage.app",
+            messagingSenderId: "196266170863",
+            appId: "1:196266170863:web:4ea57f489df94aba94fe1a"
+        };
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Variables globales
             let selectedElement = null;
             let elementCount = 0;
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
             
             // Referencias a elementos DOM
             const canvas = document.getElementById('canvas');
@@ -315,12 +454,17 @@
             const sendToBack = document.getElementById('send-to-back');
             const saveBtn = document.getElementById('save-btn');
             const shareBtn = document.getElementById('share-btn');
+            const linksBtn = document.getElementById('links-btn');
             const resetBtn = document.getElementById('reset-btn');
             const shareModal = document.getElementById('share-modal');
             const shareLink = document.getElementById('share-link');
+            const linksList = document.getElementById('links-list');
             const copyLink = document.getElementById('copy-link');
             const closeModal = document.getElementById('close-modal');
             const notification = document.getElementById('notification');
+            const savedLinksView = document.getElementById('saved-links-view');
+            const savedLinksList = document.getElementById('saved-links-list');
+            const backToEditor = document.getElementById('back-to-editor');
             
             // Inicializar con el primer elemento seleccionado
             selectElement(document.querySelector('.editable'));
@@ -373,6 +517,7 @@
                 
                 // Hacer el nuevo texto editable inmediatamente
                 makeElementEditable(newText);
+                makeElementDraggable(newText);
             });
             
             // Agregar imagen
@@ -398,6 +543,7 @@
                             
                             // Hacer la imagen arrastrable y seleccionable
                             makeElementEditable(newImage);
+                            makeElementDraggable(newImage);
                         };
                         reader.readAsDataURL(file);
                     }
@@ -426,9 +572,53 @@
                 }
             }
             
+            // Hacer elementos arrastrables
+            function makeElementDraggable(element) {
+                element.addEventListener('mousedown', function(e) {
+                    if (e.target !== element && !element.contains(e.target)) return;
+                    
+                    isDragging = true;
+                    selectedElement = element;
+                    selectElement(element);
+                    
+                    // Guardar posición inicial
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    initialLeft = parseInt(window.getComputedStyle(element).left) || 0;
+                    initialTop = parseInt(window.getComputedStyle(element).top) || 0;
+                    
+                    // Establecer posición absoluta si no está establecida
+                    if (window.getComputedStyle(element).position === 'static') {
+                        element.style.position = 'absolute';
+                    }
+                    
+                    document.addEventListener('mousemove', dragElement);
+                    document.addEventListener('mouseup', stopDrag);
+                    
+                    e.preventDefault();
+                });
+            }
+            
+            function dragElement(e) {
+                if (!isDragging) return;
+                
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                
+                selectedElement.style.left = (initialLeft + dx) + 'px';
+                selectedElement.style.top = (initialTop + dy) + 'px';
+            }
+            
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener('mousemove', dragElement);
+                document.removeEventListener('mouseup', stopDrag);
+            }
+            
             // Inicializar elementos existentes
             document.querySelectorAll('.editable').forEach(function(element) {
                 makeElementEditable(element);
+                makeElementDraggable(element);
             });
             
             // Permitir hacer clic en el canvas para deseleccionar
@@ -512,29 +702,144 @@
                 }
             });
             
-            // Guardar proyecto
+            // Guardar proyecto en Firebase
             saveBtn.addEventListener('click', function() {
-                // En una aplicación real, aquí se enviarían los datos al servidor
-                showNotification('¡Proyecto guardado exitosamente!');
+                const projectData = {
+                    content: canvas.innerHTML,
+                    timestamp: Date.now(),
+                    title: prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto") || "Mi Proyecto"
+                };
+                
+                // Guardar en Firebase
+                const newProjectRef = database.ref('projects').push();
+                newProjectRef.set(projectData)
+                    .then(() => {
+                        // Mostrar enlace
+                        const projectId = newProjectRef.key;
+                        const shareUrl = `${window.location.origin}${window.location.pathname}?view=${projectId}`;
+                        
+                        showNotification('¡Proyecto guardado exitosamente!');
+                        
+                        // Guardar en localStorage para acceso rápido
+                        saveProjectLink(projectId, projectData.title, shareUrl);
+                    })
+                    .catch(error => {
+                        console.error("Error al guardar:", error);
+                        showNotification('Error al guardar el proyecto');
+                    });
             });
+            
+            // Guardar enlace en localStorage
+            function saveProjectLink(id, title, url) {
+                let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
+                savedProjects[id] = { title, url };
+                localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
+            }
+            
+            // Cargar enlaces guardados
+            function loadSavedProjects() {
+                const savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
+                return savedProjects;
+            }
             
             // Compartir proyecto
             shareBtn.addEventListener('click', function() {
-                // En una aplicación real, se generaría un enlace único
-                shareLink.value = window.location.href + '?project=' + Date.now();
+                const savedProjects = loadSavedProjects();
+                const linksList = document.getElementById('links-list');
+                linksList.innerHTML = '';
+                
+                if (Object.keys(savedProjects).length === 0) {
+                    linksList.innerHTML = '<p>No tienes proyectos guardados todavía.</p>';
+                } else {
+                    for (const [id, project] of Object.entries(savedProjects)) {
+                        const linkItem = document.createElement('div');
+                        linkItem.className = 'link-item';
+                        linkItem.innerHTML = `
+                            <a href="${project.url}" target="_blank">${project.title}</a>
+                            <button class="delete-link" data-id="${id}">Eliminar</button>
+                        `;
+                        linksList.appendChild(linkItem);
+                    }
+                    
+                    // Agregar event listeners para botones de eliminar
+                    document.querySelectorAll('.delete-link').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const projectId = this.getAttribute('data-id');
+                            deleteProject(projectId);
+                        });
+                    });
+                }
+                
                 shareModal.style.display = 'flex';
             });
             
-            // Copiar enlace
-            copyLink.addEventListener('click', function() {
-                shareLink.select();
-                document.execCommand('copy');
-                showNotification('¡Enlace copiado al portapapeles!');
+            // Eliminar proyecto
+            function deleteProject(projectId) {
+                // Eliminar de Firebase
+                database.ref('projects/' + projectId).remove()
+                    .then(() => {
+                        // Eliminar de localStorage
+                        let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
+                        delete savedProjects[projectId];
+                        localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
+                        
+                        showNotification('Proyecto eliminado');
+                        shareBtn.click(); // Recargar la lista
+                    })
+                    .catch(error => {
+                        console.error("Error al eliminar:", error);
+                        showNotification('Error al eliminar el proyecto');
+                    });
+            }
+            
+            // Mostrar mis enlaces
+            linksBtn.addEventListener('click', function() {
+                const savedProjects = loadSavedProjects();
+                const savedLinksList = document.getElementById('saved-links-list');
+                savedLinksList.innerHTML = '';
+                
+                if (Object.keys(savedProjects).length === 0) {
+                    savedLinksList.innerHTML = '<p>No tienes proyectos guardados todavía.</p>';
+                } else {
+                    for (const [id, project] of Object.entries(savedProjects)) {
+                        const linkCard = document.createElement('div');
+                        linkCard.className = 'saved-link-card';
+                        linkCard.innerHTML = `
+                            <h3>${project.title}</h3>
+                            <a href="${project.url}" target="_blank">${project.url}</a>
+                            <div>
+                                <button class="view-btn" data-url="${project.url}">Ver</button>
+                                <button class="delete-link" data-id="${id}">Eliminar</button>
+                            </div>
+                        `;
+                        savedLinksList.appendChild(linkCard);
+                    }
+                    
+                    // Agregar event listeners
+                    document.querySelectorAll('.view-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const url = this.getAttribute('data-url');
+                            window.open(url, '_blank');
+                        });
+                    });
+                    
+                    document.querySelectorAll('.delete-link').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const projectId = this.getAttribute('data-id');
+                            deleteProject(projectId);
+                        });
+                    });
+                }
+                
+                // Mostrar vista de enlaces
+                canvas.style.display = 'none';
+                savedLinksView.style.display = 'block';
             });
             
-            // Cerrar modal
-            closeModal.addEventListener('click', function() {
-                shareModal.style.display = 'none';
+            // Volver al editor
+            backToEditor.addEventListener('click', function() {
+                savedLinksView.style.display = 'none';
+                canvas.style.display = 'block';
             });
             
             // Nuevo proyecto
@@ -551,8 +856,14 @@
                     
                     canvas.appendChild(initialElement);
                     makeElementEditable(initialElement);
+                    makeElementDraggable(initialElement);
                     selectElement(initialElement);
                 }
+            });
+            
+            // Cerrar modal
+            closeModal.addEventListener('click', function() {
+                shareModal.style.display = 'none';
             });
             
             // Mostrar notificación
@@ -563,6 +874,37 @@
                 setTimeout(function() {
                     notification.style.display = 'none';
                 }, 3000);
+            }
+            
+            // Comprobar si estamos en modo visualización
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewParam = urlParams.get('view');
+            
+            if (viewParam) {
+                // Ocultar herramientas y mostrar solo el contenido
+                document.querySelector('.toolbar').style.display = 'none';
+                document.querySelector('.editor-header').style.display = 'none';
+                
+                // Cargar el proyecto desde Firebase
+                database.ref('projects/' + viewParam).once('value')
+                    .then(snapshot => {
+                        const projectData = snapshot.val();
+                        if (projectData) {
+                            canvas.innerHTML = projectData.content;
+                            
+                            // Deshabilitar edición
+                            document.querySelectorAll('.editable').forEach(element => {
+                                element.style.pointerEvents = 'none';
+                                element.style.border = 'none';
+                            });
+                        } else {
+                            canvas.innerHTML = '<p>El proyecto no existe o ha sido eliminado.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar:", error);
+                        canvas.innerHTML = '<p>Error al cargar el proyecto.</p>';
+                    });
             }
         });
     </script>
