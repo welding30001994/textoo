@@ -930,7 +930,38 @@
     </div>
 
     <script>
+        // Simulación de base de datos en la nube
+        const cloudDatabase = {
+            projects: {},
+            saveProject: function(id, data) {
+                this.projects[id] = data;
+                // Guardar en localStorage como respaldo
+                localStorage.setItem('cloudProjects', JSON.stringify(this.projects));
+                return true;
+            },
+            getProject: function(id) {
+                return this.projects[id];
+            },
+            getAllProjects: function() {
+                return this.projects;
+            },
+            deleteProject: function(id) {
+                if (this.projects[id]) {
+                    delete this.projects[id];
+                    localStorage.setItem('cloudProjects', JSON.stringify(this.projects));
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        // Cargar proyectos guardados en localStorage al iniciar
         document.addEventListener('DOMContentLoaded', function() {
+            const savedCloudProjects = localStorage.getItem('cloudProjects');
+            if (savedCloudProjects) {
+                cloudDatabase.projects = JSON.parse(savedCloudProjects);
+            }
+            
             // Variables globales
             let selectedElement = null;
             let elementCount = 0;
@@ -1012,7 +1043,7 @@
                     selectedElement.classList.add('selected');
                     
                     // Actualizar controles con las propiedades del elemento
-                    if (selectedElement.tagName === 'IMG' || selectedElement.tagName === 'IFRAME') {
+                    if (selectedElement.tagName === 'IMG' || selectedElement.tagName === 'VIDEO' || selectedElement.tagName === 'IFRAME') {
                         editTextInput.value = '';
                         editTextInput.disabled = true;
                     } else {
@@ -1419,7 +1450,7 @@
                 }
             });
             
-            // Guardar proyecto en localStorage
+            // Guardar proyecto en la nube simulada
             saveBtn.addEventListener('click', function() {
                 const projectName = prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto") || "Mi Proyecto";
                 
@@ -1429,14 +1460,19 @@
                     title: projectName
                 };
                 
-                // Guardar en localStorage
+                // Guardar en la nube simulada
                 const projectId = 'project_' + Date.now();
                 const shareUrl = `${window.location.origin}${window.location.pathname}?view=${projectId}`;
                 
-                // Guardar en localStorage
-                saveProjectToLocalStorage(projectId, projectData, shareUrl);
+                // Guardar en la base de datos en la nube
+                cloudDatabase.saveProject(projectId, { 
+                    title: projectData.title, 
+                    url: shareUrl,
+                    timestamp: projectData.timestamp,
+                    content: projectData.content
+                });
                 
-                showNotification('¡Proyecto guardado exitosamente en tu navegador!');
+                showNotification('¡Proyecto guardado exitosamente! Enlace disponible para compartir.');
             });
             
             // Descargar proyecto
@@ -1516,22 +1552,9 @@
                 showNotification('¡Código HTML descargado exitosamente!');
             });
             
-            // Guardar en localStorage
-            function saveProjectToLocalStorage(id, data, url) {
-                let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
-                savedProjects[id] = { 
-                    title: data.title, 
-                    url: url,
-                    timestamp: data.timestamp,
-                    content: data.content
-                };
-                localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
-                return id;
-            }
-            
-            // Cargar proyectos guardados desde localStorage
+            // Cargar proyectos guardados desde la nube
             function loadSavedProjects() {
-                return JSON.parse(localStorage.getItem('savedProjects') || '{}');
+                return cloudDatabase.getAllProjects();
             }
             
             // Compartir proyecto
@@ -1567,13 +1590,13 @@
             
             // Eliminar proyecto
             function deleteProject(projectId) {
-                // Eliminar de localStorage
-                let savedProjects = JSON.parse(localStorage.getItem('savedProjects') || '{}');
-                delete savedProjects[projectId];
-                localStorage.setItem('savedProjects', JSON.stringify(savedProjects));
-                
-                showNotification('Proyecto eliminado');
-                shareBtn.click(); // Recargar la lista
+                // Eliminar de la nube
+                if (cloudDatabase.deleteProject(projectId)) {
+                    showNotification('Proyecto eliminado');
+                    shareBtn.click(); // Recargar la lista
+                } else {
+                    showNotification('Error al eliminar el proyecto', true);
+                }
             }
             
             // Mostrar mis enlaces
@@ -1865,7 +1888,7 @@
                 mainContainer.classList.add('view-mode');
                 viewActions.style.display = 'flex';
                 
-                // Cargar el proyecto desde localStorage
+                // Cargar el proyecto desde la nube
                 const savedProjects = loadSavedProjects();
                 const projectData = savedProjects[viewParam];
                 
