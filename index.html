@@ -725,6 +725,9 @@
                 <button class="tool-button" id="add-image-btn">
                     <i class="fas fa-image"></i> Agregar Imagen
                 </button>
+                <button class="tool-button" id="add-image-url-btn">
+                    <i class="fas fa-link"></i> Imagen desde URL
+                </button>
                 <button class="tool-button" id="add-video-btn">
                     <i class="fas fa-video"></i> Agregar Video
                 </button>
@@ -895,6 +898,28 @@
         </div>
     </div>
     
+    <!-- Modal para imagen desde URL -->
+    <div class="modal" id="image-url-modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-link"></i> Insertar Imagen desde URL</h2>
+            <p>Pega la URL de la imagen:</p>
+            <input type="text" id="image-url" placeholder="https://ejemplo.com/imagen.jpg">
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="image-width" placeholder="Ancho (px)">
+                <input type="number" id="image-height" placeholder="Alto (px)">
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="tool-button" id="insert-image-url">
+                    <i class="fas fa-plus"></i> Insertar
+                </button>
+                <button class="tool-button" style="background: var(--secondary);" id="close-image-url-modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Modal para recortar imagen -->
     <div class="modal" id="crop-modal">
         <div class="modal-content">
@@ -978,6 +1003,7 @@
             const canvas = document.getElementById('canvas');
             const addTextBtn = document.getElementById('add-text-btn');
             const addImageBtn = document.getElementById('add-image-btn');
+            const addImageUrlBtn = document.getElementById('add-image-url-btn');
             const addVideoBtn = document.getElementById('add-video-btn');
             const addYoutubeBtn = document.getElementById('add-youtube-btn');
             const editTextInput = document.getElementById('edit-text');
@@ -1009,6 +1035,12 @@
             const videoHeight = document.getElementById('video-height');
             const insertYoutubeBtn = document.getElementById('insert-youtube');
             const closeYoutubeModal = document.getElementById('close-youtube-modal');
+            const imageUrlModal = document.getElementById('image-url-modal');
+            const imageUrl = document.getElementById('image-url');
+            const imageWidth = document.getElementById('image-width');
+            const imageHeight = document.getElementById('image-height');
+            const insertImageUrlBtn = document.getElementById('insert-image-url');
+            const closeImageUrlModal = document.getElementById('close-image-url-modal');
             const cropModal = document.getElementById('crop-modal');
             const cropContainer = document.getElementById('crop-container');
             const applyCropBtn = document.getElementById('apply-crop');
@@ -1123,6 +1155,61 @@
                 };
                 
                 input.click();
+            });
+            
+            // Agregar imagen desde URL
+            addImageUrlBtn.addEventListener('click', function() {
+                imageUrlModal.style.display = 'flex';
+            });
+            
+            // Insertar imagen desde URL
+            insertImageUrlBtn.addEventListener('click', function() {
+                const url = imageUrl.value;
+                if (!url) {
+                    showNotification('Por favor ingresa una URL de imagen', true);
+                    return;
+                }
+                
+                elementCount++;
+                const newImage = document.createElement('img');
+                newImage.src = url;
+                newImage.className = 'editable';
+                newImage.style.maxWidth = '100%';
+                newImage.style.margin = '10px 0';
+                
+                // Aplicar dimensiones si se especificaron
+                if (imageWidth.value) {
+                    newImage.style.width = imageWidth.value + 'px';
+                }
+                if (imageHeight.value) {
+                    newImage.style.height = imageHeight.value + 'px';
+                }
+                
+                // Verificar si la imagen se carga correctamente
+                newImage.onload = function() {
+                    canvas.appendChild(newImage);
+                    selectElement(newImage);
+                    
+                    // Hacer la imagen arrastrable y seleccionable
+                    makeElementEditable(newImage);
+                    makeElementDraggable(newImage);
+                    addResizeHandles(newImage);
+                    
+                    imageUrlModal.style.display = 'none';
+                    imageUrl.value = '';
+                    imageWidth.value = '';
+                    imageHeight.value = '';
+                };
+                
+                newImage.onerror = function() {
+                    showNotification('Error al cargar la imagen. Verifica la URL.', true);
+                    newImage.remove();
+                };
+            });
+            
+            // Cerrar modal de imagen URL
+            closeImageUrlModal.addEventListener('click', function() {
+                imageUrlModal.style.display = 'none';
             });
             
             // Agregar video
@@ -1450,6 +1537,166 @@
                 }
             });
             
+            // Plantilla elegante para exportación
+            function createElegantTemplate(content, title) {
+                return `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #16162b 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .document-container {
+            background-color: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin: 40px auto;
+        }
+        
+        .document-header {
+            background: linear-gradient(90deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .document-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .document-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .document-content {
+            padding: 40px;
+        }
+        
+        .document-content * {
+            max-width: 100%;
+        }
+        
+        .document-content h1, 
+        .document-content h2, 
+        .document-content h3, 
+        .document-content h4, 
+        .document-content h5, 
+        .document-content h6 {
+            color: #4361ee;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            text-align: center;
+        }
+        
+        .document-content p {
+            margin-bottom: 1.2em;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .document-content img {
+            display: block;
+            margin: 2em auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .document-content iframe {
+            display: block;
+            margin: 2em auto;
+            max-width: 100%;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .document-content video {
+            display: block;
+            margin: 2em auto;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .document-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .document-container {
+                border-radius: 10px;
+                margin: 20px auto;
+            }
+            
+            .document-header {
+                padding: 20px;
+            }
+            
+            .document-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .document-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <div class="document-header">
+            <h1>${title}</h1>
+            <p>Documento creado con Editor Visual Web Futurista</p>
+        </div>
+        
+        <div class="document-content">
+            ${content}
+        </div>
+        
+        <div class="document-footer">
+            <p>© ${new Date().getFullYear()} - Creado con Editor Visual Web Futurista</p>
+        </div>
+    </div>
+</body>
+</html>`;
+            }
+            
             // Guardar proyecto en la nube simulada
             saveBtn.addEventListener('click', function() {
                 const projectName = prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto") || "Mi Proyecto";
@@ -1477,36 +1724,10 @@
             
             // Descargar proyecto
             downloadBtn.addEventListener('click', function() {
-                // Crear un archivo HTML con el contenido del canvas
-                const htmlContent = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Proyecto</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        ${canvas.innerHTML}
-    </div>
-</body>
-</html>`;
+                const projectName = prompt("Nombre del proyecto:", "Mi Proyecto") || "Mi Proyecto";
+                
+                // Crear un archivo HTML con la plantilla elegante
+                const htmlContent = createElegantTemplate(canvas.innerHTML, projectName);
                 
                 // Crear un blob con el contenido
                 const blob = new Blob([htmlContent], { type: 'text/html' });
@@ -1515,7 +1736,7 @@
                 // Crear un enlace de descarga
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'mi-proyecto.html';
+                a.download = `${projectName.toLowerCase().replace(/\s+/g, '-')}.html`;
                 document.body.appendChild(a);
                 a.click();
                 
@@ -1530,7 +1751,8 @@
             
             // Obtener HTML del proyecto
             viewHtmlBtn.addEventListener('click', function() {
-                const htmlContent = canvas.innerHTML;
+                const projectName = prompt("Nombre del proyecto:", "Mi Proyecto") || "Mi Proyecto";
+                const htmlContent = createElegantTemplate(canvas.innerHTML, projectName);
                 
                 // Crear un blob con el contenido
                 const blob = new Blob([htmlContent], { type: 'text/html' });
@@ -1539,7 +1761,7 @@
                 // Crear un enlace de descarga
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'codigo-proyecto.html';
+                a.download = `${projectName.toLowerCase().replace(/\s+/g, '-')}.html`;
                 document.body.appendChild(a);
                 a.click();
                 
@@ -1634,7 +1856,7 @@
                     document.querySelectorAll('.download-btn').forEach(button => {
                         button.addEventListener('click', function() {
                             const projectId = this.getAttribute('data-id');
-                            downloadProject(projectId);
+                            downloadSavedProject(projectId);
                         });
                     });
                     
@@ -1654,40 +1876,13 @@
             });
             
             // Descargar proyecto específico
-            function downloadProject(projectId) {
+            function downloadSavedProject(projectId) {
                 const savedProjects = loadSavedProjects();
                 const project = savedProjects[projectId];
                 
                 if (project) {
-                    const htmlContent = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${project.title}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        ${project.content}
-    </div>
-</body>
-</html>`;
+                    // Crear un archivo HTML con la plantilla elegante
+                    const htmlContent = createElegantTemplate(project.content, project.title);
                     
                     // Crear un blob con el contenido
                     const blob = new Blob([htmlContent], { type: 'text/html' });
@@ -1893,7 +2088,14 @@
                 const projectData = savedProjects[viewParam];
                 
                 if (projectData) {
-                    canvas.innerHTML = projectData.content;
+                    // Usar la plantilla elegante para mostrar el contenido
+                    const elegantTemplate = createElegantTemplate(projectData.content, projectData.title);
+                    
+                    // Crear un documento temporal para extraer solo el contenido
+                    const tempDoc = new DOMParser().parseFromString(elegantTemplate, 'text/html');
+                    const contentElement = tempDoc.querySelector('.document-content');
+                    
+                    canvas.innerHTML = contentElement ? contentElement.innerHTML : projectData.content;
                     document.title = projectData.title;
                     
                     // Deshabilitar edición
@@ -1906,30 +2108,34 @@
                 
                 // Configurar botones de descarga
                 viewDownloadBtn.addEventListener('click', function() {
-                    downloadProject(viewParam);
+                    if (projectData) {
+                        downloadSavedProject(viewParam);
+                    }
                 });
                 
                 viewHtmlBtn.addEventListener('click', function() {
-                    const htmlContent = canvas.innerHTML;
-                    
-                    // Crear un blob con el contenido
-                    const blob = new Blob([htmlContent], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    
-                    // Crear un enlace de descarga
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'codigo-proyecto.html';
-                    document.body.appendChild(a);
-                    a.click();
-                    
-                    // Limpiar
-                    setTimeout(function() {
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }, 100);
-                    
-                    showNotification('¡Código HTML descargado exitosamente!');
+                    if (projectData) {
+                        const htmlContent = createElegantTemplate(projectData.content, projectData.title);
+                        
+                        // Crear un blob con el contenido
+                        const blob = new Blob([htmlContent], { type: 'text/html' });
+                        const url = URL.createObjectURL(blob);
+                        
+                        // Crear un enlace de descarga
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${projectData.title.toLowerCase().replace(/\s+/g, '-')}.html`;
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        // Limpiar
+                        setTimeout(function() {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
+                        
+                        showNotification('¡Código HTML descargado exitosamente!');
+                    }
                 });
             }
         });
