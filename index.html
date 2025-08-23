@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Visual Web</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Panel lateral de herramientas */
+        .toolbar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .toolbar h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+        
+        .tool-section {
+            margin-bottom: 25px;
+        }
+        
+        .tool-section h3 {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #4a6278;
+            padding-bottom: 5px;
+        }
+        
+        .tool-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .tool-button:hover {
+            background-color: #2980b9;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Área de edición */
+        .editor-area {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .editor-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .editor-header h1 {
+            color: #2c3e50;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .save-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .share-btn {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        /* Canvas de edición */
+        .canvas {
+            width: 800px;
+            min-height: 600px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .editable {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 2px dashed transparent;
+            transition: border-color 0.3s;
+        }
+        
+        .editable:hover {
+            border-color: #3498db;
+        }
+        
+        .editable.selected {
+            border-color: #e74c3c;
+        }
+        
+        .editable img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Modal para compartir */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+        }
+        
+        .modal h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .modal input {
+            margin-bottom: 15px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel de herramientas lateral -->
+        <div class="toolbar">
+            <h2>Herramientas</h2>
+            
+            <div class="tool-section">
+                <h3>Elementos</h3>
+                <button class="tool-button" id="add-text-btn">Agregar Texto</button>
+                <button class="tool-button" id="add-image-btn">Agregar Imagen</button>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Propiedades</h3>
+                <input type="text" id="edit-text" placeholder="Editar texto...">
+                <input type="color" id="color-picker" value="#000000">
+                <select id="font-family">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select id="font-size">
+                    <option value="12px">Pequeño</option>
+                    <option value="16px" selected>Mediano</option>
+                    <option value="24px">Grande</option>
+                    <option value="32px">Muy Grande</option>
+                </select>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Alineación</h3>
+                <button class="tool-button" id="align-left">Alinear Izquierda</button>
+                <button class="tool-button" id="align-center">Alinear Centro</button>
+                <button class="tool-button" id="align-right">Alinear Derecha</button>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Acciones</h3>
+                <button class="tool-button" id="delete-element">Eliminar Elemento</button>
+                <button class="tool-button" id="bring-to-front">Traer al Frente</button>
+                <button class="tool-button" id="send-to-back">Enviar al Fondo</button>
+            </div>
+        </div>
+        
+        <!-- Área principal de edición -->
+        <div class="editor-area">
+            <div class="editor-header">
+                <h1>Editor Visual Web</h1>
+                <div class="action-buttons">
+                    <button class="action-button save-btn" id="save-btn">Guardar Proyecto</button>
+                    <button class="action-button share-btn" id="share-btn">Compartir</button>
+                    <button class="action-button reset-btn" id="reset-btn">Nuevo Proyecto</button>
+                </div>
+            </div>
+            
+            <div class="canvas" id="canvas">
+                <!-- Aquí se agregarán los elementos editables -->
+                <div class="editable" style="text-align: center;">
+                    <h2 style="color: #3498db;">Haz clic para editar este título</h2>
+                    <p>Haz clic aquí para cambiar este texto. Puedes agregar imágenes, cambiar colores y mucho más.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para compartir -->
+    <div class="modal" id="share-modal">
+        <div class="modal-content">
+            <h2>Compartir tu creación</h2>
+            <p>Tu proyecto se ha guardado. Comparte este enlace con otras personas:</p>
+            <input type="text" id="share-link" readonly>
+            <div class="modal-buttons">
+                <button class="tool-button" id="copy-link">Copiar Enlace</button>
+                <button class="tool-button" style="background-color: #95a5a6;" id="close-modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notificación -->
+    <div class="notification" id="notification">
+        ¡Cambios guardados exitosamente!
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables globales
+            let selectedElement = null;
+            let elementCount = 0;
+            
+            // Referencias a elementos DOM
+            const canvas = document.getElementById('canvas');
+            const addTextBtn = document.getElementById('add-text-btn');
+            const addImageBtn = document.getElementById('add-image-btn');
+            const editTextInput = document.getElementById('edit-text');
+            const colorPicker = document.getElementById('color-picker');
+            const fontFamily = document.getElementById('font-family');
+            const fontSize = document.getElementById('font-size');
+            const alignLeft = document.getElementById('align-left');
+            const alignCenter = document.getElementById('align-center');
+            const alignRight = document.getElementById('align-right');
+            const deleteElement = document.getElementById('delete-element');
+            const bringToFront = document.getElementById('bring-to-front');
+            const sendToBack = document.getElementById('send-to-back');
+            const saveBtn = document.getElementById('save-btn');
+            const shareBtn = document.getElementById('share-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const shareModal = document.getElementById('share-modal');
+            const shareLink = document.getElementById('share-link');
+            const copyLink = document.getElementById('copy-link');
+            const closeModal = document.getElementById('close-modal');
+            const notification = document.getElementById('notification');
+            
+            // Inicializar con el primer elemento seleccionado
+            selectElement(document.querySelector('.editable'));
+            
+            // Función para seleccionar un elemento
+            function selectElement(element) {
+                // Deseleccionar elemento anterior
+                if (selectedElement) {
+                    selectedElement.classList.remove('selected');
+                }
+                
+                // Seleccionar nuevo elemento
+                selectedElement = element;
+                selectedElement.classList.add('selected');
+                
+                // Actualizar controles con las propiedades del elemento
+                if (selectedElement.tagName === 'IMG') {
+                    editTextInput.value = '';
+                    editTextInput.disabled = true;
+                } else {
+                    editTextInput.disabled = false;
+                    editTextInput.value = selectedElement.innerText;
+                    colorPicker.value = rgbToHex(selectedElement.style.color || '#000000');
+                    fontFamily.value = selectedElement.style.fontFamily || 'Arial';
+                    fontSize.value = selectedElement.style.fontSize || '16px';
+                }
+            }
+            
+            // Convertir RGB a HEX (para el selector de color)
+            function rgbToHex(rgb) {
+                if (!rgb || rgb === '') return '#000000';
+                
+                if (rgb.indexOf('rgb') === -1) return rgb;
+                
+                const rgbValues = rgb.match(/\d+/g);
+                return '#' + ((1 << 24) + (parseInt(rgbValues[0]) << 16) + 
+                            (parseInt(rgbValues[1]) << 8) + parseInt(rgbValues[2])).toString(16).slice(1);
+            }
+            
+            // Agregar texto editable
+            addTextBtn.addEventListener('click', function() {
+                elementCount++;
+                const newText = document.createElement('div');
+                newText.className = 'editable';
+                newText.innerHTML = '<p>Nuevo texto ' + elementCount + ' - haz clic para editar</p>';
+                newText.style.margin = '10px 0';
+                
+                canvas.appendChild(newText);
+                selectElement(newText);
+                
+                // Hacer el nuevo texto editable inmediatamente
+                makeElementEditable(newText);
+            });
+            
+            // Agregar imagen
+            addImageBtn.addEventListener('click', function() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            elementCount++;
+                            const newImage = document.createElement('img');
+                            newImage.src = event.target.result;
+                            newImage.className = 'editable';
+                            newImage.style.maxWidth = '100%';
+                            newImage.style.margin = '10px 0';
+                            
+                            canvas.appendChild(newImage);
+                            selectElement(newImage);
+                            
+                            // Hacer la imagen arrastrable y seleccionable
+                            makeElementEditable(newImage);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                
+                input.click();
+            });
+            
+            // Hacer elementos editables y seleccionables
+            function makeElementEditable(element) {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectElement(element);
+                });
+                
+                // Hacer texto editable al hacer doble clic
+                if (element.tagName !== 'IMG') {
+                    element.addEventListener('dblclick', function() {
+                        this.setAttribute('contenteditable', 'true');
+                        this.focus();
+                    });
+                    
+                    element.addEventListener('blur', function() {
+                        this.removeAttribute('contenteditable');
+                    });
+                }
+            }
+            
+            // Inicializar elementos existentes
+            document.querySelectorAll('.editable').forEach(function(element) {
+                makeElementEditable(element);
+            });
+            
+            // Permitir hacer clic en el canvas para deseleccionar
+            canvas.addEventListener('click', function(e) {
+                if (e.target === canvas) {
+                    if (selectedElement) {
+                        selectedElement.classList.remove('selected');
+                        selectedElement = null;
+                        editTextInput.value = '';
+                    }
+                }
+            });
+            
+            // Actualizar texto del elemento seleccionado
+            editTextInput.addEventListener('input', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.innerText = editTextInput.value;
+                }
+            });
+            
+            // Cambiar color del texto
+            colorPicker.addEventListener('input', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.style.color = colorPicker.value;
+                }
+            });
+            
+            // Cambiar fuente
+            fontFamily.addEventListener('change', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.style.fontFamily = fontFamily.value;
+                }
+            });
+            
+            // Cambiar tamaño de fuente
+            fontSize.addEventListener('change', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.style.fontSize = fontSize.value;
+                }
+            });
+            
+            // Alineación de texto
+            alignLeft.addEventListener('click', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.style.textAlign = 'left';
+                }
+            });
+            
+            alignCenter.addEventListener('click', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.style.textAlign = 'center';
+                }
+            });
+            
+            alignRight.addEventListener('click', function() {
+                if (selectedElement && selectedElement.tagName !== 'IMG') {
+                    selectedElement.style.textAlign = 'right';
+                }
+            });
+            
+            // Eliminar elemento
+            deleteElement.addEventListener('click', function() {
+                if (selectedElement) {
+                    selectedElement.remove();
+                    selectedElement = null;
+                    editTextInput.value = '';
+                }
+            });
+            
+            // Traer al frente
+            bringToFront.addEventListener('click', function() {
+                if (selectedElement) {
+                    canvas.appendChild(selectedElement);
+                }
+            });
+            
+            // Enviar al fondo
+            sendToBack.addEventListener('click', function() {
+                if (selectedElement) {
+                    canvas.insertBefore(selectedElement, canvas.firstChild);
+                }
+            });
+            
+            // Guardar proyecto
+            saveBtn.addEventListener('click', function() {
+                // En una aplicación real, aquí se enviarían los datos al servidor
+                showNotification('¡Proyecto guardado exitosamente!');
+            });
+            
+            // Compartir proyecto
+            shareBtn.addEventListener('click', function() {
+                // En una aplicación real, se generaría un enlace único
+                shareLink.value = window.location.href + '?project=' + Date.now();
+                shareModal.style.display = 'flex';
+            });
+            
+            // Copiar enlace
+            copyLink.addEventListener('click', function() {
+                shareLink.select();
+                document.execCommand('copy');
+                showNotification('¡Enlace copiado al portapapeles!');
+            });
+            
+            // Cerrar modal
+            closeModal.addEventListener('click', function() {
+                shareModal.style.display = 'none';
+            });
+            
+            // Nuevo proyecto
+            resetBtn.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres comenzar un nuevo proyecto? Se perderán todos los cambios no guardados.')) {
+                    canvas.innerHTML = '';
+                    selectedElement = null;
+                    editTextInput.value = '';
+                    
+                    // Agregar elemento inicial
+                    const initialElement = document.createElement('div');
+                    initialElement.className = 'editable';
+                    initialElement.innerHTML = '<h2 style="color: #3498db; text-align: center;">Haz clic para editar este título</h2><p style="text-align: center;">Haz clic aquí para cambiar este texto. Puedes agregar imágenes, cambiar colores y mucho más.</p>';
+                    
+                    canvas.appendChild(initialElement);
+                    makeElementEditable(initialElement);
+                    selectElement(initialElement);
+                }
+            });
+            
+            // Mostrar notificación
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.style.display = 'block';
+                
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
