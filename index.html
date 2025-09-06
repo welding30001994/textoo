@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vip Forex</title>
+    <title>OXXOMAXTRADING VIP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
@@ -19,13 +20,14 @@
             --background: #0a0a1a;
             --surface: #16162b;
             --text: #e9ecef;
+            --neon: #00f3ff;
         }
         
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Exo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
@@ -33,6 +35,9 @@
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(28, 28, 60, 0.3) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(38, 38, 86, 0.3) 0%, transparent 25%);
         }
         
         .container {
@@ -40,44 +45,54 @@
             min-height: 100vh;
         }
         
-        /* Panel lateral de herramientas */
+        /* Panel lateral de herramientas futurista */
         .toolbar {
-            width: 280px;
-            background-color: var(--surface);
+            width: 300px;
+            background: linear-gradient(165deg, var(--surface) 0%, #1a1a3a 100%);
             color: var(--text);
             padding: 20px;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.5);
+            box-shadow: 0 0 25px rgba(67, 97, 238, 0.3);
             overflow-y: auto;
             transition: all 0.3s ease;
             z-index: 100;
+            border-right: 1px solid rgba(67, 97, 238, 0.2);
         }
         
         .toolbar.collapsed {
-            transform: translateX(-250px);
+            transform: translateX(-270px);
         }
         
         .toggle-toolbar {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 20px;
+            left: 20px;
             z-index: 101;
             background: var(--primary);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             cursor: pointer;
             display: none;
+            box-shadow: 0 0 15px rgba(67, 97, 238, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-toolbar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(67, 97, 238, 0.9);
         }
         
         .toolbar h2 {
             margin-bottom: 25px;
             text-align: center;
-            font-size: 1.5rem;
-            color: var(--success);
+            font-size: 1.6rem;
+            color: var(--neon);
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.7);
         }
         
         .toolbar h2:after {
@@ -86,9 +101,9 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
+            width: 70px;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
             border-radius: 3px;
         }
         
@@ -97,7 +112,20 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(67, 97, 238, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-section:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
         }
         
         .tool-section h3 {
@@ -106,53 +134,76 @@
             color: var(--info);
             display: flex;
             align-items: center;
+            font-weight: 600;
         }
         
         .tool-section h3 i {
             margin-right: 10px;
+            color: var(--neon);
         }
         
         .tool-button {
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             margin-bottom: 10px;
-            background: linear-gradient(145deg, var(--primary), var(--secondary));
+            background: linear-gradient(145deg, rgba(67, 97, 238, 0.2), rgba(58, 12, 163, 0.2));
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(67, 97, 238, 0.3);
+        }
+        
+        .tool-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .tool-button:hover:before {
+            left: 100%;
         }
         
         .tool-button i {
             margin-right: 10px;
+            font-size: 1.1rem;
         }
         
         .tool-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15), 0 0 15px rgba(67, 97, 238, 0.4);
+            background: linear-gradient(145deg, rgba(67, 97, 238, 0.3), rgba(58, 12, 163, 0.3));
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 12px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(10, 10, 30, 0.6);
+            border: 1px solid rgba(67, 97, 238, 0.4);
             border-radius: 6px;
             color: var(--text);
+            transition: all 0.3s ease;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3), 0 0 15px rgba(67, 97, 238, 0.3);
         }
         
-        /* Área de edición */
+        /* Área de edición futurista */
         .editor-area {
             flex-grow: 1;
             padding: 20px;
@@ -161,6 +212,21 @@
             align-items: center;
             background: var(--background);
             position: relative;
+            overflow-x: hidden;
+        }
+        
+        .editor-area:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(58, 12, 163, 0.1) 0%, transparent 15%),
+                radial-gradient(circle at 80% 70%, rgba(114, 9, 183, 0.1) 0%, transparent 15%);
+            pointer-events: none;
+            z-index: -1;
         }
         
         .editor-header {
@@ -168,17 +234,78 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .editor-header:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
+            opacity: 0.5;
         }
         
         .editor-header h1 {
-            color: var(--success);
-            font-size: 1.8rem;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            font-size: 2.2rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--neon));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 15px rgba(76, 201, 240, 0.5);
+            display: flex;
+            align-items: center;
+        }
+        
+        .editor-header h1 i {
+            margin-right: 15px;
+            font-size: 2rem;
+            color: var(--neon);
+            text-shadow: 0 0 10px var(--neon);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(67, 97, 238, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAuNjY3LDEwLjMzM2MzMC42NjcsMCwzMy4zMzMsNDAsMzMuMzMzLDQwYzAsMC0yLjY2Niw0MC0zMy4zMzMsNDBTMTcuMzM0LDUwLjMzMywxNy4zMzQsNTAuMzMzUzIwLDEwLjMzMyw1MC42NjcsMTAuMzMzeiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiLz48cGF0aCBkPSJNMzMuMzM0LDMzLjMzM2MwLDUuNTIzLDMwLDExLjA0NywzMy4zMzMsMTEuMDQ3YzMuMzMzLDAsMzMuMzMzLTUuNTI0LDMzLjMzMy0xMS4wNDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTMzLjMzNCw2Ni42NjZjMC01LjUyMywyOC4xMjUtMTEuMDQ3LDMzLjMzMy0xMS4wNDdjNS4yMDgsMCwzMy4zMzMsNS41MjQsMzMuMzMzLDExLjA0NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMiLz48L3N2Zz4=') center/70% no-repeat;
+        }
+        
+        .vip-badge {
+            background: linear-gradient(145deg, var(--warning), #ff5e00);
+            color: black;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-left: 15px;
+            box-shadow: 0 0 15px rgba(252, 163, 17, 0.7);
+            animation: pulse 2s infinite;
         }
         
         .action-buttons {
@@ -188,7 +315,7 @@
         }
         
         .action-button {
-            padding: 10px 18px;
+            padding: 12px 20px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -196,10 +323,29 @@
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .action-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .action-button:hover:before {
+            left: 100%;
         }
         
         .action-button i {
             margin-right: 8px;
+            font-size: 1.1rem;
         }
         
         .save-btn {
@@ -228,137 +374,184 @@
         }
         
         .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         
-        /* Pestañas de páginas */
+        /* Pestañas de páginas futuristas */
         .page-tabs {
             display: flex;
-            width: 800px;
+            width: 850px;
             overflow-x: auto;
-            margin-bottom: 15px;
-            background: var(--surface);
-            border-radius: 10px;
-            padding: 10px;
+            margin-bottom: 20px;
+            background: rgba(22, 22, 43, 0.8);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(67, 97, 238, 0.2);
         }
         
         .page-tab {
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: rgba(255, 255, 255, 0.1);
-            margin-right: 8px;
-            border-radius: 6px;
+            margin-right: 10px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .page-tab:hover {
+            background: rgba(67, 97, 238, 0.2);
         }
         
         .page-tab.active {
-            background: var(--primary);
+            background: linear-gradient(145deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
         }
         
         .page-tab i {
             margin-left: 8px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .page-tab:hover i {
+            color: var(--danger);
         }
         
         .add-page {
-            padding: 8px 12px;
+            padding: 10px 15px;
             background: var(--success);
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
         
-        /* Canvas de edición */
+        .add-page:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(76, 201, 240, 0.7);
+        }
+        
+        /* Canvas de edición futurista */
         .canvas-container {
             position: relative;
-            width: 800px;
-            min-height: 600px;
+            width: 850px;
+            min-height: 650px;
             overflow: auto;
             background: var(--surface);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+        }
+        
+        .canvas-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary), transparent, var(--accent), transparent, var(--primary));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
         
         .canvas {
             width: 100%;
-            min-height: 600px;
+            min-height: 650px;
             background-color: white;
-            padding: 30px;
+            padding: 40px;
             position: relative;
             overflow: hidden;
             background-image: 
                 linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-size: 25px 25px;
         }
         
         .editable {
-            margin-bottom: 15px;
-            padding: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
             border: 2px dashed transparent;
             transition: all 0.3s ease;
             cursor: move;
             position: relative;
+            border-radius: 8px;
         }
         
         .editable:hover {
             border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
         }
         
         .editable.selected {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(114, 9, 183, 0.3);
+            box-shadow: 0 0 0 2px rgba(114, 9, 183, 0.3), 0 5px 20px rgba(114, 9, 183, 0.2);
         }
         
         .editable img {
             max-width: 100%;
             height: auto;
+            border-radius: 5px;
         }
         
         .resize-handle {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: var(--primary);
             border-radius: 50%;
             z-index: 10;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            border: 2px solid white;
         }
         
         .resize-handle.nw {
-            top: -6px;
-            left: -6px;
+            top: -7px;
+            left: -7px;
             cursor: nw-resize;
         }
         
         .resize-handle.ne {
-            top: -6px;
-            right: -6px;
+            top: -7px;
+            right: -7px;
             cursor: ne-resize;
         }
         
         .resize-handle.sw {
-            bottom: -6px;
-            left: -6px;
+            bottom: -7px;
+            left: -7px;
             cursor: sw-resize;
         }
         
         .resize-handle.se {
-            bottom: -6px;
-            right: -6px;
+            bottom: -7px;
+            right: -7px;
             cursor: se-resize;
         }
         
         .element-actions {
             position: absolute;
-            top: -30px;
+            top: -40px;
             right: 0;
             background: var(--surface);
-            border-radius: 6px;
-            padding: 5px;
+            border-radius: 8px;
+            padding: 8px;
             display: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            z-index: 20;
         }
         
         .editable.selected .element-actions {
@@ -370,11 +563,18 @@
             border: none;
             color: var(--text);
             cursor: pointer;
-            padding: 5px;
-            font-size: 0.9rem;
+            padding: 5px 8px;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
         }
         
-        /* Modal para compartir */
+        .element-actions button:hover {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--primary);
+        }
+        
+        /* Modal para compartir futurista */
         .modal {
             display: none;
             position: fixed;
@@ -382,59 +582,83 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
         
         .modal-content {
-            background-color: var(--surface);
-            padding: 30px;
-            border-radius: 15px;
-            width: 500px;
+            background: linear-gradient(145deg, #1a1a3a, var(--surface));
+            padding: 35px;
+            border-radius: 20px;
+            width: 550px;
             max-width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            position: relative;
+        }
+        
+        .modal-content:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary), transparent, var(--accent));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
         
         .modal h2 {
             margin-bottom: 20px;
             color: var(--success);
             text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
         }
         
         .modal input {
             margin-bottom: 20px;
+            background-color: rgba(10, 10, 30, 0.7);
+            border: 1px solid rgba(67, 97, 238, 0.5);
         }
         
         .modal-buttons {
             display: flex;
             justify-content: flex-end;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 25px;
         }
         
-        /* Lista de enlaces */
+        /* Lista de enlaces futurista */
         .links-list {
-            margin-top: 20px;
+            margin-top: 25px;
             max-height: 300px;
             overflow-y: auto;
         }
         
         .link-item {
-            padding: 12px;
+            padding: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: background 0.3s;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: rgba(10, 10, 30, 0.5);
         }
         
         .link-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(67, 97, 238, 0.2);
         }
         
         .link-item a {
@@ -445,30 +669,43 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .link-item a:hover {
+            color: var(--neon);
+            text-shadow: 0 0 5px rgba(76, 201, 240, 0.5);
         }
         
         .link-item button {
-            background-color: var(--danger);
+            background: linear-gradient(145deg, var(--danger), #d90429);
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 15px;
             border-radius: 6px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        /* Notificaciones */
+        .link-item button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
+        }
+        
+        /* Notificaciones futuristas */
         .notification {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 25px;
+            bottom: 25px;
+            right: 25px;
+            padding: 18px 28px;
             background: linear-gradient(145deg, var(--success), #3a86ff);
             color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
             display: none;
             z-index: 1001;
-            animation: slideIn 0.3s ease;
+            animation: slideIn 0.4s ease;
+            border-left: 5px solid var(--neon);
         }
         
         @keyframes slideIn {
@@ -478,80 +715,121 @@
         
         .notification.error {
             background: linear-gradient(145deg, var(--danger), #d90429);
+            border-left: 5px solid #ff0055;
         }
         
-        /* Vista de enlaces guardados */
+        /* Vista de enlaces guardados futurista */
         .saved-links-view {
             display: none;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         
         .saved-links-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .saved-links-header h2 {
+            color: var(--success);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
         }
         
         .saved-links-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
         }
         
         .saved-link-card {
-            background-color: var(--surface);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
+            background: linear-gradient(145deg, #1a1a3a, var(--surface));
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .saved-link-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary), transparent, var(--accent));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
         
         .saved-link-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         
         .saved-link-card h3 {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             color: var(--success);
+            font-family: 'Orbitron', sans-serif;
         }
         
         .saved-link-card a {
             color: var(--info);
             text-decoration: none;
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .saved-link-card a:hover {
+            color: var(--neon);
         }
         
         .saved-link-card button {
             border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-right: 8px;
+            margin-right: 10px;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
         
         .saved-link-card .view-btn {
-            background: var(--success);
+            background: linear-gradient(145deg, var(--success), #3a86ff);
             color: white;
         }
         
         .saved-link-card .download-btn {
-            background: var(--info);
+            background: linear-gradient(145deg, var(--info), #277da1);
             color: white;
         }
         
         .saved-link-card .delete-btn {
-            background: var(--danger);
+            background: linear-gradient(145deg, var(--danger), #d90429);
             color: white;
         }
         
-        /* Modo visualización */
+        .saved-link-card button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Modo visualización futurista */
         .view-mode .toolbar,
         .view-mode .editor-header,
         .view-mode .page-tabs {
@@ -585,31 +863,31 @@
         
         .view-actions {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             display: flex;
-            gap: 10px;
+            gap: 15px;
             z-index: 100;
         }
         
         /* Responsive */
-        @media (max-width: 1200px) {
+        @media (max-width: 1300px) {
             .canvas-container, .page-tabs {
-                width: 700px;
+                width: 750px;
             }
         }
         
-        @media (max-width: 992px) {
+        @media (max-width: 1100px) {
             .canvas-container, .page-tabs {
-                width: 600px;
+                width: 650px;
             }
             
             .toolbar {
-                width: 240px;
+                width: 260px;
             }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .container {
                 flex-direction: column;
             }
@@ -631,12 +909,12 @@
             }
             
             .editor-area {
-                padding: 70px 15px 15px 15px;
+                padding: 80px 20px 20px 20px;
             }
             
             .editor-header {
                 flex-direction: column;
-                gap: 15px;
+                gap: 20px;
             }
             
             .canvas-container, .page-tabs {
@@ -650,11 +928,15 @@
             .action-buttons {
                 justify-content: center;
             }
+            
+            .logo-container {
+                margin-bottom: 15px;
+            }
         }
         
-        @media (max-width: 576px) {
+        @media (max-width: 600px) {
             .action-button {
-                padding: 8px 12px;
+                padding: 10px 15px;
                 font-size: 0.9rem;
             }
             
@@ -663,17 +945,26 @@
             }
             
             .modal-content {
-                padding: 20px;
+                padding: 25px;
             }
             
             .saved-links-list {
                 grid-template-columns: 1fr;
             }
+            
+            .editor-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .vip-badge {
+                font-size: 0.8rem;
+                padding: 4px 10px;
+            }
         }
         
         /* Animaciones y efectos futuristas */
         .glow-effect {
-            box-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
+            box-shadow: 0 0 20px rgba(67, 97, 238, 0.7);
         }
         
         .pulse {
@@ -682,14 +973,19 @@
         
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
             100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
         }
         
-        /* Scrollbar personalizado */
+        .neon-text {
+            text-shadow: 0 0 5px var(--neon), 0 0 10px var(--neon), 0 0 15px var(--neon);
+            color: white;
+        }
+        
+        /* Scrollbar personalizado futurista */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
         }
         
         ::-webkit-scrollbar-track {
@@ -698,27 +994,197 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
             border-radius: 10px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
+            background: linear-gradient(to bottom, var(--accent), var(--primary));
+        }
+        
+        /* Efectos de partículas para el fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(67, 97, 238, 0.5);
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.7);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Indicador de carga futurista */
+        .loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 26, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .loader-content {
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(67, 97, 238, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Estadísticas en tiempo real */
+        .stats-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(22, 22, 43, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            z-index: 99;
+            display: none;
+        }
+        
+        .stats-panel h3 {
+            color: var(--neon);
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        /* Tutorial interactivo */
+        .tutorial {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(22, 22, 43, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            z-index: 99;
+            max-width: 300px;
+            display: none;
+        }
+        
+        .tutorial h3 {
+            color: var(--neon);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .tutorial p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .tutorial-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p class="neon-text">Procesando...</p>
+        </div>
+    </div>
+    
+    <div class="stats-panel" id="stats-panel">
+        <h3><i class="fas fa-chart-line"></i> ESTADÍSTICAS</h3>
+        <div class="stat-item">
+            <span>Elementos:</span>
+            <span class="stat-value" id="stat-elements">0</span>
+        </div>
+        <div class="stat-item">
+            <span>Páginas:</span>
+            <span class="stat-value" id="stat-pages">1</span>
+        </div>
+        <div class="stat-item">
+            <span>Proyectos guardados:</span>
+            <span class="stat-value" id="stat-projects">0</span>
+        </div>
+    </div>
+    
+    <div class="tutorial" id="tutorial">
+        <button class="tutorial-close" id="tutorial-close"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-graduation-cap"></i> CONSEJO RÁPIDO</h3>
+        <p>Haz doble clic en cualquier elemento de texto para editarlo directamente. Usa los controles laterales para personalizar aún más.</p>
+    </div>
+    
     <button class="toggle-toolbar" id="toggle-toolbar">
         <i class="fas fa-bars"></i>
     </button>
     
     <div class="container" id="main-container">
-        <!-- Panel de herramientas lateral -->
+        <!-- Panel de herramientas lateral futurista -->
         <div class="toolbar" id="toolbar">
-            <h2><i class="fas fa-palette"></i> Herramientas</h2>
+            <h2><i class="fas fa-palette"></i> HERRAMIENTAS VIP</h2>
             
             <div class="tool-section">
-                <h3><i class="fas fa-cube"></i> Elementos</h3>
+                <h3><i class="fas fa-cube"></i> ELEMENTOS</h3>
                 <button class="tool-button" id="add-text-btn">
                     <i class="fas fa-font"></i> Agregar Texto
                 </button>
@@ -734,10 +1200,13 @@
                 <button class="tool-button" id="add-youtube-btn">
                     <i class="fab fa-youtube"></i> Insertar YouTube
                 </button>
+                <button class="tool-button" id="add-chart-btn">
+                    <i class="fas fa-chart-bar"></i> Gráfico Trading
+                </button>
             </div>
             
             <div class="tool-section">
-                <h3><i class="fas fa-sliders-h"></i> Propiedades</h3>
+                <h3><i class="fas fa-sliders-h"></i> PROPIEDADES</h3>
                 <input type="text" id="edit-text" placeholder="Editar texto...">
                 <input type="color" id="color-picker" value="#000000">
                 <select id="font-family">
@@ -748,6 +1217,8 @@
                     <option value="Georgia">Georgia</option>
                     <option value="Poppins">Poppins</option>
                     <option value="Montserrat">Montserrat</option>
+                    <option value="Orbitron">Orbitron</option>
+                    <option value="Exo 2">Exo 2</option>
                 </select>
                 <select id="font-size">
                     <option value="12px">Pequeño (12px)</option>
@@ -756,12 +1227,14 @@
                     <option value="32px">Muy Grande (32px)</option>
                     <option value="48px">Extra Grande (48px)</option>
                 </select>
-                <input type="number" id="element-width" placeholder="Ancho (px)">
-                <input type="number" id="element-height" placeholder="Alto (px)">
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="element-width" placeholder="Ancho (px)">
+                    <input type="number" id="element-height" placeholder="Alto (px)">
+                </div>
             </div>
             
             <div class="tool-section">
-                <h3><i class="fas fa-align-left"></i> Alineación</h3>
+                <h3><i class="fas fa-align-left"></i> ALINEACIÓN</h3>
                 <button class="tool-button" id="align-left">
                     <i class="fas fa-align-left"></i> Alinear Izquierda
                 </button>
@@ -774,7 +1247,7 @@
             </div>
             
             <div class="tool-section">
-                <h3><i class="fas fa-layer-group"></i> Capas</h3>
+                <h3><i class="fas fa-layer-group"></i> CAPAS</h3>
                 <button class="tool-button" id="bring-to-front">
                     <i class="fas fa-arrow-to-top"></i> Traer al Frente
                 </button>
@@ -784,20 +1257,39 @@
             </div>
             
             <div class="tool-section">
-                <h3><i class="fas fa-trash-alt"></i> Acciones</h3>
+                <h3><i class="fas fa-magic"></i> EFECTOS</h3>
+                <button class="tool-button" id="add-shadow">
+                    <i class="fas fa-box-shadow"></i> Añadir Sombra
+                </button>
+                <button class="tool-button" id="add-gradient">
+                    <i class="fas fa-fill-drip"></i> Gradiente de Fondo
+                </button>
+                <button class="tool-button" id="add-animation">
+                    <i class="fas fa-film"></i> Añadir Animación
+                </button>
+            </div>
+            
+            <div class="tool-section">
+                <h3><i class="fas fa-trash-alt"></i> ACCIONES</h3>
                 <button class="tool-button" id="delete-element">
                     <i class="fas fa-trash"></i> Eliminar Elemento
                 </button>
                 <button class="tool-button" id="crop-image">
                     <i class="fas fa-crop-alt"></i> Recortar Imagen
                 </button>
+                <button class="tool-button" id="duplicate-element">
+                    <i class="fas fa-copy"></i> Duplicar Elemento
+                </button>
             </div>
         </div>
         
-        <!-- Área principal de edición -->
+        <!-- Área principal de edición futurista -->
         <div class="editor-area">
             <div class="editor-header">
-                <h1><i class="fas fa-globe"></i>Vip Forex</h1>
+                <div class="logo-container">
+                    <div class="logo"></div>
+                    <h1><i class="fas fa-globe"></i>OXXOMAX-TRADING <span class="vip-badge">VIP FOREX</span></h1>
+                </div>
                 <div class="action-buttons">
                     <button class="action-button save-btn" id="save-btn">
                         <i class="fas fa-save"></i> Guardar
@@ -814,10 +1306,16 @@
                     <button class="action-button reset-btn" id="reset-btn">
                         <i class="fas fa-plus"></i> Nuevo
                     </button>
+                    <button class="action-button" id="stats-btn" style="background: linear-gradient(145deg, #7209b7, #560bad);">
+                        <i class="fas fa-chart-bar"></i> Stats
+                    </button>
+                    <button class="action-button" id="tutorial-btn" style="background: linear-gradient(145deg, #4cc9f0, #3a86ff);">
+                        <i class="fas fa-question"></i> Ayuda
+                    </button>
                 </div>
             </div>
             
-            <!-- Pestañas de páginas -->
+            <!-- Pestañas de páginas futuristas -->
             <div class="page-tabs" id="page-tabs">
                 <div class="page-tab active" data-page="1">
                     Página 1 <i class="fas fa-times" data-page="1"></i>
@@ -827,21 +1325,41 @@
                 </div>
             </div>
             
-            <!-- Canvas de edición -->
+            <!-- Canvas de edición futurista -->
             <div class="canvas-container">
                 <div class="canvas" id="canvas">
-                    <!-- Aquí se agregarán los elementos editables -->
-                    <div class="editable" style="text-align: center;">
-                        <h2 style="color: #4361ee;">Haz clic para editar este título</h2>
-                        <p>Haz clic aquí para cambiar este texto. Puedes agregar imágenes, cambiar colores y mucho más.</p>
+                    <!-- Contenido inicial con estilo futurista -->
+                    <div class="editable" style="text-align: center; padding: 30px; background: linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(58, 12, 163, 0.1)); border-radius: 15px;">
+                        <h2 style="color: #4361ee; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 10px rgba(67, 97, 238, 0.5);">BIENVENIDO A OXXOMAX TRADING VIP</h2>
+                        <p style="font-size: 1.2rem; color: #4cc9f0;">La plataforma de edición más avanzada para traders profesionales</p>
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(10, 10, 30, 0.5); border-radius: 10px; border-left: 4px solid var(--neon);">
+                            <p style="margin: 0; font-style: italic;">Haz clic para editar este texto. Personaliza tu contenido con nuestras herramientas avanzadas.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="editable" style="text-align: center; margin-top: 30px;">
+                        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                            <div style="padding: 20px; background: rgba(67, 97, 238, 0.1); border-radius: 10px; min-width: 200px;">
+                                <h3 style="color: var(--success);">ANÁLISIS TÉCNICO</h3>
+                                <p>Herramientas profesionales para el análisis de mercados</p>
+                            </div>
+                            <div style="padding: 20px; background: rgba(114, 9, 183, 0.1); border-radius: 10px; min-width: 200px;">
+                                <h3 style="color: var(--warning);">SEÑALES EN TIEMPO REAL</h3>
+                                <p>Recibe alertas instantáneas de trading</p>
+                            </div>
+                            <div style="padding: 20px; background: rgba(76, 201, 240, 0.1); border-radius: 10px; min-width: 200px;">
+                                <h3 style="color: var(--danger);">FORMACIÓN AVANZADA</h3>
+                                <p>Cursos exclusivos para miembros VIP</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Vista de enlaces guardados -->
+            <!-- Vista de enlaces guardados futurista -->
             <div class="saved-links-view" id="saved-links-view">
                 <div class="saved-links-header">
-                    <h2><i class="fas fa-bookmark"></i> Mis Páginas Guardadas</h2>
+                    <h2><i class="fas fa-bookmark"></i> MIS PÁGINAS GUARDADAS</h2>
                     <button class="action-button" id="back-to-editor">
                         <i class="fas fa-arrow-left"></i> Volver al Editor
                     </button>
@@ -853,10 +1371,10 @@
         </div>
     </div>
     
-    <!-- Modal para compartir -->
+    <!-- Modal para compartir futurista -->
     <div class="modal" id="share-modal">
         <div class="modal-content">
-            <h2><i class="fas fa-share-alt"></i> Compartir tu creación</h2>
+            <h2><i class="fas fa-share-alt"></i> COMPARTIR TU CREACIÓN</h2>
             <p>Tu proyecto se ha guardado. Comparte este enlace con otras personas:</p>
             <input type="text" id="share-link" readonly>
             
@@ -876,10 +1394,10 @@
         </div>
     </div>
     
-    <!-- Modal para YouTube -->
+    <!-- Modal para YouTube futurista -->
     <div class="modal" id="youtube-modal">
         <div class="modal-content">
-            <h2><i class="fab fa-youtube"></i> Insertar Video de YouTube</h2>
+            <h2><i class="fab fa-youtube"></i> INSERTAR VIDEO DE YOUTUBE</h2>
             <p>Pega la URL del video de YouTube:</p>
             <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
             <div style="display: flex; gap: 10px;">
@@ -898,10 +1416,10 @@
         </div>
     </div>
     
-    <!-- Modal para imagen desde URL -->
+    <!-- Modal para imagen desde URL futurista -->
     <div class="modal" id="image-url-modal">
         <div class="modal-content">
-            <h2><i class="fas fa-link"></i> Insertar Imagen desde URL</h2>
+            <h2><i class="fas fa-link"></i> INSERTAR IMAGEN DESDE URL</h2>
             <p>Pega la URL de la imagen:</p>
             <input type="text" id="image-url" placeholder="https://ejemplo.com/imagen.jpg">
             <div style="display: flex; gap: 10px;">
@@ -920,10 +1438,38 @@
         </div>
     </div>
     
-    <!-- Modal para recortar imagen -->
+    <!-- Modal para gráficos de trading -->
+    <div class="modal" id="chart-modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-chart-bar"></i> INSERTAR GRÁFICO DE TRADING</h2>
+            <p>Selecciona el tipo de gráfico:</p>
+            <select id="chart-type">
+                <option value="line">Gráfico de Líneas</option>
+                <option value="candlestick">Velas Japonesas</option>
+                <option value="bar">Barras</option>
+                <option value="area">Área</option>
+            </select>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="number" id="chart-width" placeholder="Ancho (px)" value="600">
+                <input type="number" id="chart-height" placeholder="Alto (px)" value="400">
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="tool-button" id="insert-chart">
+                    <i class="fas fa-plus"></i> Insertar
+                </button>
+                <button class="tool-button" style="background: var(--secondary);" id="close-chart-modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para recortar imagen futurista -->
     <div class="modal" id="crop-modal">
         <div class="modal-content">
-            <h2><i class="fas fa-crop-alt"></i> Recortar Imagen</h2>
+            <h2><i class="fas fa-crop-alt"></i> RECORTAR IMAGEN</h2>
             <div id="crop-container" style="margin-bottom: 20px; max-height: 300px; overflow: auto;">
                 <!-- Aquí se mostrará la imagen para recortar -->
             </div>
@@ -939,12 +1485,12 @@
         </div>
     </div>
     
-    <!-- Notificación -->
+    <!-- Notificación futurista -->
     <div class="notification" id="notification">
         <i class="fas fa-check-circle"></i> ¡Cambios guardados exitosamente!
     </div>
     
-    <!-- Acciones en modo visualización -->
+    <!-- Acciones en modo visualización futurista -->
     <div class="view-actions" id="view-actions" style="display: none;">
         <button class="action-button download-btn" id="view-download-btn">
             <i class="fas fa-download"></i> Descargar
@@ -1006,6 +1552,7 @@
             const addImageUrlBtn = document.getElementById('add-image-url-btn');
             const addVideoBtn = document.getElementById('add-video-btn');
             const addYoutubeBtn = document.getElementById('add-youtube-btn');
+            const addChartBtn = document.getElementById('add-chart-btn');
             const editTextInput = document.getElementById('edit-text');
             const colorPicker = document.getElementById('color-picker');
             const fontFamily = document.getElementById('font-family');
@@ -1018,12 +1565,18 @@
             const deleteElement = document.getElementById('delete-element');
             const bringToFront = document.getElementById('bring-to-front');
             const sendToBack = document.getElementById('send-to-back');
+            const addShadow = document.getElementById('add-shadow');
+            const addGradient = document.getElementById('add-gradient');
+            const addAnimation = document.getElementById('add-animation');
+            const duplicateElement = document.getElementById('duplicate-element');
             const cropImageBtn = document.getElementById('crop-image');
             const saveBtn = document.getElementById('save-btn');
             const shareBtn = document.getElementById('share-btn');
             const downloadBtn = document.getElementById('download-btn');
             const linksBtn = document.getElementById('links-btn');
             const resetBtn = document.getElementById('reset-btn');
+            const statsBtn = document.getElementById('stats-btn');
+            const tutorialBtn = document.getElementById('tutorial-btn');
             const shareModal = document.getElementById('share-modal');
             const shareLink = document.getElementById('share-link');
             const linksList = document.getElementById('links-list');
@@ -1035,6 +1588,12 @@
             const videoHeight = document.getElementById('video-height');
             const insertYoutubeBtn = document.getElementById('insert-youtube');
             const closeYoutubeModal = document.getElementById('close-youtube-modal');
+            const chartModal = document.getElementById('chart-modal');
+            const chartType = document.getElementById('chart-type');
+            const chartWidth = document.getElementById('chart-width');
+            const chartHeight = document.getElementById('chart-height');
+            const insertChartBtn = document.getElementById('insert-chart');
+            const closeChartModal = document.getElementById('close-chart-modal');
             const imageUrlModal = document.getElementById('image-url-modal');
             const imageUrl = document.getElementById('image-url');
             const imageWidth = document.getElementById('image-width');
@@ -1057,9 +1616,46 @@
             const addPageBtn = document.getElementById('add-page');
             const toggleToolbarBtn = document.getElementById('toggle-toolbar');
             const toolbar = document.getElementById('toolbar');
+            const statsPanel = document.getElementById('stats-panel');
+            const statElements = document.getElementById('stat-elements');
+            const statPages = document.getElementById('stat-pages');
+            const statProjects = document.getElementById('stat-projects');
+            const tutorialPanel = document.getElementById('tutorial');
+            const tutorialClose = document.getElementById('tutorial-close');
+            const loader = document.getElementById('loader');
+            const particlesContainer = document.getElementById('particles');
+            
+            // Crear partículas de fondo
+            function createParticles() {
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.width = Math.random() * 5 + 2 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particle.style.animationDelay = Math.random() * 5 + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+            
+            // Actualizar estadísticas
+            function updateStats() {
+                statElements.textContent = document.querySelectorAll('.editable').length;
+                statPages.textContent = Object.keys(pages).length;
+                statProjects.textContent = Object.keys(cloudDatabase.getAllProjects()).length;
+            }
+            
+            // Mostrar/ocultar loader
+            function showLoader(show) {
+                loader.style.display = show ? 'flex' : 'none';
+            }
             
             // Inicializar con el primer elemento seleccionado
             selectElement(document.querySelector('.editable'));
+            createParticles();
+            updateStats();
             
             // Función para seleccionar un elemento
             function selectElement(element) {
@@ -1094,6 +1690,8 @@
                     elementWidth.value = '';
                     elementHeight.value = '';
                 }
+                
+                updateStats();
             }
             
             // Convertir RGB a HEX (para el selector de color)
@@ -1113,7 +1711,10 @@
                 const newText = document.createElement('div');
                 newText.className = 'editable';
                 newText.innerHTML = '<p>Nuevo texto ' + elementCount + ' - haz clic para editar</p>';
-                newText.style.margin = '10px 0';
+                newText.style.margin = '15px 0';
+                newText.style.padding = '15px';
+                newText.style.background = 'rgba(67, 97, 238, 0.1)';
+                newText.style.borderRadius = '8px';
                 
                 canvas.appendChild(newText);
                 selectElement(newText);
@@ -1122,6 +1723,7 @@
                 makeElementEditable(newText);
                 makeElementDraggable(newText);
                 addResizeHandles(newText);
+                updateStats();
             });
             
             // Agregar imagen
@@ -1133,6 +1735,7 @@
                 input.onchange = function(e) {
                     const file = e.target.files[0];
                     if (file) {
+                        showLoader(true);
                         const reader = new FileReader();
                         reader.onload = function(event) {
                             elementCount++;
@@ -1140,7 +1743,8 @@
                             newImage.src = event.target.result;
                             newImage.className = 'editable';
                             newImage.style.maxWidth = '100%';
-                            newImage.style.margin = '10px 0';
+                            newImage.style.margin = '15px 0';
+                            newImage.style.borderRadius = '8px';
                             
                             canvas.appendChild(newImage);
                             selectElement(newImage);
@@ -1149,6 +1753,8 @@
                             makeElementEditable(newImage);
                             makeElementDraggable(newImage);
                             addResizeHandles(newImage);
+                            showLoader(false);
+                            updateStats();
                         };
                         reader.readAsDataURL(file);
                     }
@@ -1170,12 +1776,14 @@
                     return;
                 }
                 
+                showLoader(true);
                 elementCount++;
                 const newImage = document.createElement('img');
                 newImage.src = url;
                 newImage.className = 'editable';
                 newImage.style.maxWidth = '100%';
-                newImage.style.margin = '10px 0';
+                newImage.style.margin = '15px 0';
+                newImage.style.borderRadius = '8px';
                 
                 // Aplicar dimensiones si se especificaron
                 if (imageWidth.value) {
@@ -1199,11 +1807,14 @@
                     imageUrl.value = '';
                     imageWidth.value = '';
                     imageHeight.value = '';
+                    showLoader(false);
+                    updateStats();
                 };
                 
                 newImage.onerror = function() {
                     showNotification('Error al cargar la imagen. Verifica la URL.', true);
                     newImage.remove();
+                    showLoader(false);
                 };
             });
             
@@ -1221,6 +1832,7 @@
                 input.onchange = function(e) {
                     const file = e.target.files[0];
                     if (file) {
+                        showLoader(true);
                         const reader = new FileReader();
                         reader.onload = function(event) {
                             elementCount++;
@@ -1229,7 +1841,8 @@
                             newVideo.className = 'editable';
                             newVideo.controls = true;
                             newVideo.style.maxWidth = '100%';
-                            newVideo.style.margin = '10px 0';
+                            newVideo.style.margin = '15px 0';
+                            newVideo.style.borderRadius = '8px';
                             
                             canvas.appendChild(newVideo);
                             selectElement(newVideo);
@@ -1238,6 +1851,8 @@
                             makeElementEditable(newVideo);
                             makeElementDraggable(newVideo);
                             addResizeHandles(newVideo);
+                            showLoader(false);
+                            updateStats();
                         };
                         reader.readAsDataURL(file);
                     }
@@ -1276,7 +1891,8 @@
                     iframe.src = `https://www.youtube.com/embed/${videoId}`;
                     iframe.frameBorder = 0;
                     iframe.allowFullscreen = true;
-                    iframe.style.margin = '10px 0';
+                    iframe.style.margin = '15px 0';
+                    iframe.style.borderRadius = '8px';
                     
                     canvas.appendChild(iframe);
                     selectElement(iframe);
@@ -1288,6 +1904,7 @@
                     
                     youtubeModal.style.display = 'none';
                     youtubeUrl.value = '';
+                    updateStats();
                 } else {
                     showNotification('URL de YouTube no válida', true);
                 }
@@ -1296,6 +1913,132 @@
             // Cerrar modal de YouTube
             closeYoutubeModal.addEventListener('click', function() {
                 youtubeModal.style.display = 'none';
+            });
+            
+            // Abrir modal de gráficos
+            addChartBtn.addEventListener('click', function() {
+                chartModal.style.display = 'flex';
+            });
+            
+            // Insertar gráfico de trading
+            insertChartBtn.addEventListener('click', function() {
+                const type = chartType.value;
+                const width = chartWidth.value || 600;
+                const height = chartHeight.value || 400;
+                
+                elementCount++;
+                const chartContainer = document.createElement('div');
+                chartContainer.className = 'editable';
+                chartContainer.style.margin = '15px 0';
+                chartContainer.style.padding = '15px';
+                chartContainer.style.background = 'rgba(10, 10, 30, 0.7)';
+                chartContainer.style.borderRadius = '8px';
+                chartContainer.style.textAlign = 'center';
+                chartContainer.style.border = '1px solid rgba(67, 97, 238, 0.3)';
+                
+                // Crear un canvas para el gráfico simulado
+                const canvasEl = document.createElement('canvas');
+                canvasEl.width = width;
+                canvasEl.height = height;
+                canvasEl.style.borderRadius = '5px';
+                canvasEl.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+                
+                // Simular un gráfico (en una implementación real, usarías una biblioteca como Chart.js)
+                const ctx = canvasEl.getContext('2d');
+                ctx.fillStyle = '#0a0a1a';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Dibujar líneas de precios simuladas
+                ctx.beginPath();
+                ctx.moveTo(50, 300);
+                ctx.lineTo(100, 250);
+                ctx.lineTo(150, 280);
+                ctx.lineTo(200, 200);
+                ctx.lineTo(250, 220);
+                ctx.lineTo(300, 150);
+                ctx.lineTo(350, 180);
+                ctx.lineTo(400, 100);
+                ctx.lineTo(450, 120);
+                ctx.lineTo(500, 80);
+                ctx.strokeStyle = '#4361ee';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Añadir texto
+                ctx.fillStyle = '#4cc9f0';
+                ctx.font = '16px Orbitron';
+                ctx.fillText('GRÁFICO DE TRADING VIP', 150, 30);
+                
+                ctx.fillStyle = '#e9ecef';
+                ctx.font = '12px Arial';
+                ctx.fillText('Simulación de gráfico ' + type, 200, 50);
+                
+                chartContainer.appendChild(canvasEl);
+                chartContainer.innerHTML += '<p style="margin-top: 10px; color: #4cc9f0; font-style: italic;">Gráfico interactivo de trading</p>';
+                
+                canvas.appendChild(chartContainer);
+                selectElement(chartContainer);
+                
+                // Hacer el gráfico arrastrable y seleccionable
+                makeElementEditable(chartContainer);
+                makeElementDraggable(chartContainer);
+                addResizeHandles(chartContainer);
+                
+                chartModal.style.display = 'none';
+                updateStats();
+            });
+            
+            // Cerrar modal de gráficos
+            closeChartModal.addEventListener('click', function() {
+                chartModal.style.display = 'none';
+            });
+            
+            // Añadir sombra al elemento
+            addShadow.addEventListener('click', function() {
+                if (!selectedElement) {
+                    showNotification('Selecciona un elemento primero', true);
+                    return;
+                }
+                
+                selectedElement.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+                showNotification('Sombra añadida al elemento');
+            });
+            
+            // Añadir gradiente de fondo
+            addGradient.addEventListener('click', function() {
+                if (!selectedElement) {
+                    showNotification('Selecciona un elemento primero', true);
+                    return;
+                }
+                
+                selectedElement.style.background = 'linear-gradient(145deg, rgba(67, 97, 238, 0.2), rgba(58, 12, 163, 0.2))';
+                showNotification('Gradiente aplicado al elemento');
+            });
+            
+            // Duplicar elemento
+            duplicateElement.addEventListener('click', function() {
+                if (!selectedElement) {
+                    showNotification('Selecciona un elemento primero', true);
+                    return;
+                }
+                
+                const clonedElement = selectedElement.cloneNode(true);
+                canvas.appendChild(clonedElement);
+                
+                // Ajustar posición ligeramente
+                const rect = selectedElement.getBoundingClientRect();
+                clonedElement.style.position = 'absolute';
+                clonedElement.style.left = (rect.left + 20) + 'px';
+                clonedElement.style.top = (rect.top + 20) + 'px';
+                
+                // Hacer el elemento clonado editable y seleccionable
+                makeElementEditable(clonedElement);
+                makeElementDraggable(clonedElement);
+                addResizeHandles(clonedElement);
+                
+                selectElement(clonedElement);
+                showNotification('Elemento duplicado');
+                updateStats();
             });
             
             // Recortar imagen
@@ -1520,6 +2263,7 @@
                 if (selectedElement) {
                     selectedElement.remove();
                     selectElement(null);
+                    updateStats();
                 }
             });
             
@@ -1545,7 +2289,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -1554,7 +2298,7 @@
         }
         
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Exo 2', sans-serif;
             background: linear-gradient(135deg, #0a0a1a 0%, #16162b 100%);
             color: #333;
             line-height: 1.6;
@@ -1568,33 +2312,60 @@
         .document-container {
             background-color: white;
             width: 100%;
-            max-width: 800px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             margin: 40px auto;
         }
         
         .document-header {
-            background: linear-gradient(90deg, #4361ee 0%, #3a0ca3 100%);
+            background: linear-gradient(90deg, #4361ee 0%, #3a0ca3 50%, #7209b7 100%);
             color: white;
-            padding: 30px;
+            padding: 40px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .document-header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAuNjY3LDEwLjMzM2MzMC42NjcsMCwzMy4zMzMsNDAsMzMuMzMzLDQwYzAsMC0yLjY2Niw0MC0zMy4zMzMsNDBTMTcuMzM0LDUwLjMzMywxNy4zMzQsNTAuMzMzUzIwLDEwLjMzMyw1MC42NjcsMTAuMzMzeiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0zMy4zMzQsMzMuMzMzYzAsNS41MjMsMzAsMTEuMDQ3LDMzLjMzMywxMS4wNDdjMy4zMzMsMCwzMy4zMzMtNS41MjQsMzMuMzMzLTExLjA0NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0zMy4zMzQsNjYuNjY2YzAtNS41MjMsMjguMTI1LTExLjA0NywzMy4zMzMtMTEuMDQ3YzUuMjA4LDAsMzMuMzMzLDUuNTI0LDMzLjMzMywxMS4wNDciIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=') center/contain no-repeat;
+            opacity: 0.1;
         }
         
         .document-header h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
         }
         
         .document-header p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
         
+        .vip-badge {
+            background: linear-gradient(145deg, #fca311, #ff5e00);
+            color: black;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            display: inline-block;
+            margin-top: 15px;
+            box-shadow: 0 0 15px rgba(252, 163, 17, 0.7);
+        }
+        
         .document-content {
-            padding: 40px;
+            padding: 50px;
         }
         
         .document-content * {
@@ -1611,6 +2382,7 @@
             margin-top: 1.5em;
             margin-bottom: 0.5em;
             text-align: center;
+            font-family: 'Orbitron', sans-serif;
         }
         
         .document-content p {
@@ -1624,8 +2396,8 @@
             margin: 2em auto;
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         
         .document-content iframe {
@@ -1633,25 +2405,29 @@
             margin: 2em auto;
             max-width: 100%;
             border: none;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         
         .document-content video {
             display: block;
             margin: 2em auto;
             max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         
         .document-footer {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             font-size: 0.9rem;
             color: #6c757d;
             border-top: 1px solid #e9ecef;
+        }
+        
+        .document-footer p {
+            margin: 0;
         }
         
         @media (max-width: 768px) {
@@ -1660,20 +2436,20 @@
             }
             
             .document-container {
-                border-radius: 10px;
+                border-radius: 15px;
                 margin: 20px auto;
             }
             
             .document-header {
-                padding: 20px;
+                padding: 25px;
             }
             
             .document-header h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
             .document-content {
-                padding: 20px;
+                padding: 25px;
             }
         }
     </style>
@@ -1682,7 +2458,8 @@
     <div class="document-container">
         <div class="document-header">
             <h1>${title}</h1>
-            <p>Vip Forex </p>
+            <p>OXXO-MAX-TRADING VIP FOREX</p>
+            <div class="vip-badge">MEMBRESÍA PREMIUM</div>
         </div>
         
         <div class="document-content">
@@ -1690,7 +2467,7 @@
         </div>
         
         <div class="document-footer">
-            <p>© ${new Date().getFullYear()} - Vip Forex</p>
+            <p>© ${new Date().getFullYear()} - OXXOMAX-TRADING VIP FOREX - Todos los derechos reservados</p>
         </div>
     </div>
 </body>
@@ -1699,7 +2476,7 @@
             
             // Guardar proyecto en la nube simulada
             saveBtn.addEventListener('click', function() {
-                const projectName = prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto") || "Mi Proyecto";
+                const projectName = prompt("¿Cómo quieres llamar a tu proyecto?", "Mi Proyecto VIP") || "Mi Proyecto VIP";
                 
                 const projectData = {
                     content: canvas.innerHTML,
@@ -1719,12 +2496,13 @@
                     content: projectData.content
                 });
                 
-                showNotification('¡Proyecto guardado exitosamente! Enlace disponible para compartir.');
+                showNotification('¡Proyecto VIP guardado exitosamente! Enlace disponible para compartir.');
+                updateStats();
             });
             
             // Descargar proyecto
             downloadBtn.addEventListener('click', function() {
-                const projectName = prompt("Nombre del proyecto:", "Mi Proyecto") || "Mi Proyecto";
+                const projectName = prompt("Nombre del proyecto:", "Mi Proyecto VIP") || "Mi Proyecto VIP";
                 
                 // Crear un archivo HTML con la plantilla elegante
                 const htmlContent = createElegantTemplate(canvas.innerHTML, projectName);
@@ -1746,12 +2524,12 @@
                     URL.revokeObjectURL(url);
                 }, 100);
                 
-                showNotification('¡Proyecto descargado exitosamente!');
+                showNotification('¡Proyecto VIP descargado exitosamente!');
             });
             
             // Obtener HTML del proyecto
             viewHtmlBtn.addEventListener('click', function() {
-                const projectName = prompt("Nombre del proyecto:", "Mi Proyecto") || "Mi Proyecto";
+                const projectName = prompt("Nombre del proyecto:", "Mi Proyecto VIP") || "Mi Proyecto VIP";
                 const htmlContent = createElegantTemplate(canvas.innerHTML, projectName);
                 
                 // Crear un blob con el contenido
@@ -1771,7 +2549,7 @@
                     URL.revokeObjectURL(url);
                 }, 100);
                 
-                showNotification('¡Código HTML descargado exitosamente!');
+                showNotification('¡Código HTML VIP descargado exitosamente!');
             });
             
             // Cargar proyectos guardados desde la nube
@@ -1815,6 +2593,7 @@
                 // Eliminar de la nube
                 if (cloudDatabase.deleteProject(projectId)) {
                     showNotification('Proyecto eliminado');
+                    updateStats();
                     shareBtn.click(); // Recargar la lista
                 } else {
                     showNotification('Error al eliminar el proyecto', true);
@@ -1901,7 +2680,7 @@
                         URL.revokeObjectURL(url);
                     }, 100);
                     
-                    showNotification('¡Proyecto descargado exitosamente!');
+                    showNotification('¡Proyecto VIP descargado exitosamente!');
                 }
             }
             
@@ -1922,7 +2701,10 @@
                     // Agregar elemento inicial
                     const initialElement = document.createElement('div');
                     initialElement.className = 'editable';
-                    initialElement.innerHTML = '<h2 style="color: #4361ee; text-align: center;">Haz clic para editar este título</h2><p style="text-align: center;">Haz clic aquí para cambiar este texto. Puedes agregar imágenes, cambiar colores y mucho más.</p>';
+                    initialElement.innerHTML = '<h2 style="color: #4361ee; text-align: center; font-family: \'Orbitron\', sans-serif;">BIENVENIDO A OXXOMAX TRADING VIP</h2><p style="text-align: center; color: #4cc9f0;">La plataforma de edición más avanzada para traders profesionales</p>';
+                    initialElement.style.padding = '30px';
+                    initialElement.style.background = 'linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(58, 12, 163, 0.1))';
+                    initialElement.style.borderRadius = '15px';
                     
                     canvas.appendChild(initialElement);
                     makeElementEditable(initialElement);
@@ -1934,6 +2716,7 @@
                     currentPage = 1;
                     pages = {1: canvas.innerHTML};
                     updatePageTabs();
+                    updateStats();
                 }
             });
             
@@ -1947,6 +2730,21 @@
             // Cerrar modal
             closeModal.addEventListener('click', function() {
                 shareModal.style.display = 'none';
+            });
+            
+            // Mostrar/ocultar estadísticas
+            statsBtn.addEventListener('click', function() {
+                statsPanel.style.display = statsPanel.style.display === 'block' ? 'none' : 'block';
+                updateStats();
+            });
+            
+            // Mostrar/ocultar tutorial
+            tutorialBtn.addEventListener('click', function() {
+                tutorialPanel.style.display = tutorialPanel.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            tutorialClose.addEventListener('click', function() {
+                tutorialPanel.style.display = 'none';
             });
             
             // Mostrar notificación
@@ -1963,7 +2761,7 @@
             // Agregar nueva página
             addPageBtn.addEventListener('click', function() {
                 const pageId = Object.keys(pages).length + 1;
-                pages[pageId] = '<div class="editable" style="text-align: center; padding: 20px;"><h2>Página nueva</h2><p>Esta es una nueva página. Agrega contenido aquí.</p></div>';
+                pages[pageId] = '<div class="editable" style="text-align: center; padding: 30px; background: linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(58, 12, 163, 0.1)); border-radius: 15px;"><h2 style="font-family: \'Orbitron\', sans-serif;">PÁGINA VIP ' + pageId + '</h2><p style="color: #4cc9f0;">Contenido exclusivo para miembros premium</p></div>';
                 
                 // Agregar pestaña
                 const pageTab = document.createElement('div');
@@ -1988,6 +2786,8 @@
                     const pageId = this.getAttribute('data-page');
                     switchPage(pageId);
                 });
+                
+                updateStats();
             });
             
             // Cambiar de página
@@ -2017,6 +2817,7 @@
                 
                 // Deseleccionar cualquier elemento
                 selectElement(null);
+                updateStats();
             }
             
             // Cerrar página
@@ -2036,6 +2837,7 @@
                 
                 // Actualizar pestañas
                 updatePageTabs();
+                updateStats();
             }
             
             // Actualizar pestañas
@@ -2134,7 +2936,7 @@
                             URL.revokeObjectURL(url);
                         }, 100);
                         
-                        showNotification('¡Código HTML descargado exitosamente!');
+                        showNotification('¡Código HTML VIP descargado exitosamente!');
                     }
                 });
             }
